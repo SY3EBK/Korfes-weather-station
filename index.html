@@ -8,12 +8,10 @@
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #eceff1; margin: 0; padding: 20px; color: #333; }
         .container { max-width: 1000px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         h1 { color: #2c3e50; text-align: center; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
-        
         .live-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin: 20px 0; }
         .data-card { background: #f8f9fa; padding: 15px; border-radius: 10px; border-left: 5px solid #3498db; text-align: center; }
         .data-card h3 { margin: 0; font-size: 0.9em; color: #7f8c8d; text-transform: uppercase; }
         .data-card div { font-size: 1.5em; font-weight: bold; color: #2c3e50; margin-top: 5px; }
-
         .media-section { margin-top: 30px; }
         .iframe-wrapper { margin-bottom: 25px; border-radius: 10px; overflow: hidden; border: 1px solid #ddd; }
         h2 { font-size: 1.2em; color: #2c3e50; margin-bottom: 10px; }
@@ -25,7 +23,6 @@
 <div class="container">
     <h1>📡 Σταθμός: <span id="stat-name">Φόρτωση...</span></h1>
 
-    <!-- LIVE DATA ΑΠΟ API -->
     <div class="live-grid">
         <div class="data-card"><h3>Θερμοκρασία</h3><div id="temp">--</div></div>
         <div class="data-card"><h3>Υγρασία</h3><div id="hum">--</div></div>
@@ -34,7 +31,6 @@
     </div>
     <p style="text-align:right; font-size:0.8em;">Τελευταία λήψη: <span id="last-update">--</span></p>
 
-    <!-- ΧΑΡΤΗΣ -->
     <div class="media-section">
         <h2>📍 Τοποθεσία Σταθμού</h2>
         <div class="iframe-wrapper">
@@ -42,7 +38,6 @@
         </div>
     </div>
 
-    <!-- ΓΡΑΦΗΜΑΤΑ -->
     <div class="media-section">
         <h2>📊 Ιστορικό Δεδομένων (24h)</h2>
         <div class="iframe-wrapper">
@@ -51,26 +46,22 @@
     </div>
 
     <div class="footer">
-        Data provided by <a href="https://aprs.fi" target="_blank">aprs.fi</a> | Updated every 10 min
+        Data provided by <a href="https://aprs.fi" target="_blank">aprs.fi</a> | Updated every 16 min
     </div>
 </div>
 
 <script>
-    // ΡΥΘΜΙΣΕΙΣ ΧΡΗΣΤΗ
     const API_KEY = `178783.zYZYiGKPgf5jTsS`; 
     const CALLSIGN = `SY3EBK-13`; 
 
     async function updateWeather() {
         try {
-            // Η ΔΙΟΡΘΩΜΕΝΗ ΓΡΑΜΜΗ URL:
             const url = `https://aprs.fi{CALLSIGN}&what=wx&apikey=${API_KEY}&format=json`;
-            
             const response = await fetch(url);
             const data = await response.json();
 
-            if (data.result === 'ok' && data.entries.length > 0) {
-                const wx = data.entries[0]; // Παίρνουμε την πρώτη εγγραφή
-                
+            if (data.result === 'ok' && data.entries && data.entries.length > 0) {
+                const wx = data.entries[0];
                 document.getElementById('stat-name').innerText = wx.name;
                 document.getElementById('temp').innerText = (wx.temp || '--') + ' °C';
                 document.getElementById('hum').innerText = (wx.humidity || '--') + ' %';
@@ -83,13 +74,9 @@
         }
     }
 
-    // Εκτέλεση κατά το άνοιγμα
     updateWeather();
-    // Ανανέωση κάθε 16 λεπτά (960.000 ms)
     setInterval(updateWeather, 960000); 
 </script>
 
-
 </body>
 </html>
-
