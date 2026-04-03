@@ -17,7 +17,6 @@
         .card { background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); padding: 15px; text-align: center; flex: 1; min-width: 300px; max-width: 480px; }
         .card h3 { margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid #eee; font-size: 1.1em; }
         
-        /* Χρώματα για τις κατηγορίες */
         .temp-h3 { color: #d62020; }
         .hum-h3 { color: #33b8ff; }
         .pres-h3 { color: #2ecc71; }
@@ -39,50 +38,50 @@
         <p>Live Δεδομένα από ESP8266 & BME280</p>
     </div>
 
-    <div class="section-title">📍 Τρέχουσες Συνθήκες</div>
+    <div class="section-title">🏔️ Κορφές-Καλαβρύτων <span style="font-size: 0.8em; opacity: 0.7;">(alt: 900m)</span></div>
     
-    <!-- ΕΝΟΤΗΤΑ 1: ΡΟΛΟΓΙΑ (GAUGES) -->
     <div class="container">
+        <!-- ΕΝΟΤΗΤΑ 1: ΡΟΛΟΓΙΑ (GAUGES) - ΑΥΞΗΜΕΝΟ ΥΨΟΣ ΓΙΑ ΝΑ ΜΗΝ ΚΟΒΟΝΤΑΙ -->
         <div class="card">
             <h3 class="temp-h3">Θερμοκρασία</h3>
-            <iframe width="250" height="150" src="https://thingspeak.com/channels/3325506/widgets/1240313"></iframe>
+            <iframe width="250" height="260" src="https://thingspeak.com"></iframe>
         </div>
 
         <div class="card">
             <h3 class="hum-h3">Υγρασία</h3>
-            <iframe width="250" height="150" src="https://thingspeak.com/channels/3325506/widgets/1240314"></iframe>
+            <iframe width="250" height="260" src="https://thingspeak.com"></iframe>
         </div>
 
         <div class="card">
             <h3 class="pres-h3">Ατμοσφαιρική Πίεση</h3>
-            <iframe width="250" height="150" src="https://thingspeak.com/channels/3325506/widgets/1240315"></iframe>
+            <iframe width="250" height="260" src="https://thingspeak.com"></iframe>
         </div>
     </div>
 
     <div class="section-title">📊 Ιστορικά Γραφήματα (Τελευταίες 15 ώρες)</div>
 
-    <!-- ΕΝΟΤΗΤΑ 2: ΓΡΑΦΗΜΑΤΑ -->
     <div class="container">
+        <!-- ΕΝΟΤΗΤΑ 2: ΓΡΑΦΗΜΑΤΑ - ΑΥΞΗΜΕΝΟ ΥΨΟΣ ΓΙΑ ΝΑ ΦΑΙΝΟΝΤΑΙ ΟΙ ΑΞΟΝΕΣ -->
         <div class="card">
             <h3 class="temp-h3">Διακύμανση Θερμοκρασίας</h3>
-            <iframe width="450" height="260" src="https://thingspeak.com"></iframe>
+            <iframe width="450" height="320" src="https://thingspeak.com"></iframe>
         </div>
 
         <div class="card">
             <h3 class="hum-h3">Διακύμανση Υγρασίας</h3>
-            <iframe width="450" height="260" src="https://thingspeak.com"></iframe>
+            <iframe width="450" height="320" src="https://thingspeak.com"></iframe>
         </div>
 
         <div class="card">
             <h3 class="pres-h3">Διακύμανση Πίεσης</h3>
-            <iframe width="450" height="260" src="https://thingspeak.com"></iframe>
+            <iframe width="450" height="320" src="https://thingspeak.com"></iframe>
         </div>
     </div>
 
     <div class="footer">
         © 2024 SY3EBK Weather Project | Δεδομένα μέσω 
         <a href="https://aprs.fi" target="_blank">APRS.fi</a> & 
-        <a href="https://thingspeak.com/channels/3325506" target="_blank">ThingSpeak</a>
+        <a href="https://thingspeak.com" target="_blank">ThingSpeak</a>
     </div>
 
 </body>
