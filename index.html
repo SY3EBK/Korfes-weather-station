@@ -1,82 +1,50 @@
 <!DOCTYPE html>
-<html lang="el">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Σταθμός APRS Weather SY3EBK-13</title>
+    <title>SY3EBK Weather Station</title>
+    <meta charset="utf-8">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #eceff1; margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 1000px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        h1 { color: #2c3e50; text-align: center; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
-        .live-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin: 20px 0; }
-        .data-card { background: #f8f9fa; padding: 15px; border-radius: 10px; border-left: 5px solid #3498db; text-align: center; }
-        .data-card h3 { margin: 0; font-size: 0.9em; color: #7f8c8d; text-transform: uppercase; }
-        .data-card div { font-size: 1.5em; font-weight: bold; color: #2c3e50; margin-top: 5px; }
-        .media-section { margin-top: 30px; }
-        .iframe-wrapper { margin-bottom: 25px; border-radius: 10px; overflow: hidden; border: 1px solid #ddd; }
-        h2 { font-size: 1.2em; color: #2c3e50; margin-bottom: 10px; }
-        .footer { text-align: center; font-size: 0.8em; color: #95a5a6; margin-top: 20px; }
+        body { font-family: Arial, sans-serif; text-align: center; background: #f4f4f4; }
+        .card { background: white; padding: 20; margin: 20px auto; width: 300px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .val { font-size: 2em; color: #2c3e50; font-weight: bold; }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <h1>📡 Σταθμός: <span id="stat-name">Φόρτωση...</span></h1>
-
-    <div class="live-grid">
-        <div class="data-card"><h3>Θερμοκρασία</h3><div id="temp">--</div></div>
-        <div class="data-card"><h3>Υγρασία</h3><div id="hum">--</div></div>
-        <div class="data-card"><h3>Πίεση</h3><div id="press">--</div></div>
-        <div class="data-card"><h3>Άνεμος</h3><div id="wind">--</div></div>
+    <h1>Μετεωρολογικός Σταθμός SY3EBK</h1>
+    
+    <div class="card">
+        <h3>Θερμοκρασία</h3>
+        <div id="temp" class="val">--</div><span>°C</span>
     </div>
-    <p style="text-align:right; font-size:0.8em;">Τελευταία λήψη: <span id="last-update">--</span></p>
-
-    <div class="media-section">
-        <h2>📍 Τοποθεσία Σταθμού</h2>
-        <div class="iframe-wrapper">
-            <iframe width="100%" height="350" frameborder="0" src="https://aprs.fi"></iframe>
-        </div>
+    
+    <div class="card">
+        <h3>Υγρασία</h3>
+        <div id="hum" class="val">--</div><span>%</span>
+    </div>
+    
+    <div class="card">
+        <h3>Πίεση</h3>
+        <div id="pres" class="val">--</div><span>hPa</span>
     </div>
 
-    <div class="media-section">
-        <h2>📊 Ιστορικό Δεδομένων (24h)</h2>
-        <div class="iframe-wrapper">
-            <iframe width="100%" height="450" frameborder="0" src="https://aprs.fi"></iframe>
-        </div>
-    </div>
+    <script>
+        const channelID = '3325506';
+        const readKey = 'PJD7SOEKQWDTW40B';
+        const url = `https://thingspeak.com{channelID}/feeds/last.json?api_key=${readKey}`;
 
-    <div class="footer">
-        Data provided by <a href="https://aprs.fi" target="_blank">aprs.fi</a> | Updated every 16 min
-    </div>
-</div>
-
-<script>
-    const API_KEY = `178783.zYZYiGKPgf5jTsS`; 
-    const CALLSIGN = `SY3EBK-13`; 
-
-    async function updateWeather() {
-        try {
-            const url = `https://aprs.fi{CALLSIGN}&what=wx&apikey=${API_KEY}&format=json`;
-            const response = await fetch(url);
-            const data = await response.json();
-
-            if (data.result === 'ok' && data.entries && data.entries.length > 0) {
-                const wx = data.entries[0];
-                document.getElementById('stat-name').innerText = wx.name;
-                document.getElementById('temp').innerText = (wx.temp || '--') + ' °C';
-                document.getElementById('hum').innerText = (wx.humidity || '--') + ' %';
-                document.getElementById('press').innerText = (wx.pressure || '--') + ' hPa';
-                document.getElementById('wind').innerText = (wx.wind_speed || '0') + ' m/s';
-                document.getElementById('last-update').innerText = new Date(wx.time * 1000).toLocaleTimeString('el-GR');
-            }
-        } catch (err) {
-            console.error("Σφάλμα API:", err);
+        function updateWeather() {
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('temp').innerText = parseFloat(data.field1).toFixed(1);
+                    document.getElementById('hum').innerText = parseFloat(data.field2).toFixed(1);
+                    document.getElementById('pres').innerText = parseFloat(data.field3).toFixed(1);
+                })
+                .catch(err => console.log('Error:', err));
         }
-    }
 
-    updateWeather();
-    setInterval(updateWeather, 960000); 
-</script>
-
+        updateWeather();
+        setInterval(updateWeather, 60000); // Ανανέωση κάθε λεπτό
+    </script>
 </body>
 </html>
