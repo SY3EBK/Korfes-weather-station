@@ -62,13 +62,14 @@
 
     async function updateWeather() {
         try {
-            // ΔΙΟΡΘΩΜΕΝΟ URL
+            // Η ΔΙΟΡΘΩΜΕΝΗ ΓΡΑΜΜΗ URL:
             const url = `https://aprs.fi{CALLSIGN}&what=wx&apikey=${API_KEY}&format=json`;
+            
             const response = await fetch(url);
             const data = await response.json();
 
             if (data.result === 'ok' && data.entries.length > 0) {
-                const wx = data.entries[0];
+                const wx = data.entries[0]; // Παίρνουμε την πρώτη εγγραφή
                 
                 document.getElementById('stat-name').innerText = wx.name;
                 document.getElementById('temp').innerText = (wx.temp || '--') + ' °C';
@@ -82,9 +83,12 @@
         }
     }
 
+    // Εκτέλεση κατά το άνοιγμα
     updateWeather();
-    setInterval(updateWeather, 600000); 
+    // Ανανέωση κάθε 16 λεπτά (960.000 ms)
+    setInterval(updateWeather, 960000); 
 </script>
+
 
 </body>
 </html>
