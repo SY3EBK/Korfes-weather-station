@@ -3,19 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Σταθμός APRS Weather</title>
+    <title>Σταθμός APRS Weather SY3EBK-13</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #eceff1; margin: 0; padding: 20px; color: #333; }
         .container { max-width: 1000px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         h1 { color: #2c3e50; text-align: center; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
         
-        /* Στυλ για τα Live Δεδομένα */
         .live-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin: 20px 0; }
         .data-card { background: #f8f9fa; padding: 15px; border-radius: 10px; border-left: 5px solid #3498db; text-align: center; }
         .data-card h3 { margin: 0; font-size: 0.9em; color: #7f8c8d; text-transform: uppercase; }
         .data-card div { font-size: 1.5em; font-weight: bold; color: #2c3e50; margin-top: 5px; }
 
-        /* Στυλ για Χάρτη και Γραφήματα */
         .media-section { margin-top: 30px; }
         .iframe-wrapper { margin-bottom: 25px; border-radius: 10px; overflow: hidden; border: 1px solid #ddd; }
         h2 { font-size: 1.2em; color: #2c3e50; margin-bottom: 10px; }
@@ -59,11 +57,12 @@
 
 <script>
     // ΡΥΘΜΙΣΕΙΣ ΧΡΗΣΤΗ
-    const API_KEY = **178783.zYZYiGKPgf5jTsS**; // Βάλε το API Key σου
-    const CALLSIGN = **SY3EBK-13**; // Βάλε το Callsign σου (π.χ. SV1XXX-13)
+    const API_KEY = `178783.zYZYiGKPgf5jTsS`; 
+    const CALLSIGN = `SY3EBK-13`; 
 
     async function updateWeather() {
         try {
+            // ΔΙΟΡΘΩΜΕΝΟ URL
             const url = `https://aprs.fi{CALLSIGN}&what=wx&apikey=${API_KEY}&format=json`;
             const response = await fetch(url);
             const data = await response.json();
@@ -83,11 +82,10 @@
         }
     }
 
-    // Εκτέλεση κατά το άνοιγμα
     updateWeather();
-    // Ανανέωση κάθε 10 λεπτά (600.000 ms) για να μην μπλοκάρει το API Key
-    setInterval(updateWeather, 600000);
+    setInterval(updateWeather, 600000); 
 </script>
 
 </body>
 </html>
+
