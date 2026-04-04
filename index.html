@@ -10,26 +10,23 @@
         .header h1 { margin: 0; font-size: 1.8em; }
         .header p { margin: 5px 0 0; opacity: 0.8; }
         
+        .live-clock-container { font-size: 1.2em; margin-top: 10px; font-weight: bold; color: #f1c40f; }
+        .sun-container { font-size: 1em; margin-top: 8px; color: #ffffff; background: rgba(255,255,255,0.1); display: inline-block; padding: 5px 15px; border-radius: 20px; }
+
         .section-title { text-align: center; margin: 40px 0 20px; font-size: 1.5em; color: #2c3e50; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
-        
         .container { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: 1300px; margin: 0 auto; }
-        
         .card { background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); padding: 15px; text-align: center; flex: 1; min-width: 300px; max-width: 480px; }
         .card h3 { margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid #eee; font-size: 1.1em; }
         
-        /* Χρώματα για τις κατηγορίες */
         .temp-h3 { color: #d62020; }
         .hum-h3 { color: #33b8ff; }
         .pres-h3 { color: #2ecc71; }
-
-        iframe { border: none; width: 100%; border-radius: 8px; }
+        iframe { border: none; width: 100%; border-radius: 8px; min-height: 260px; }
         
         .footer { text-align: center; margin-top: 50px; padding: 20px; font-size: 0.9em; color: #666; }
         .footer a { color: #1a73e8; text-decoration: none; font-weight: bold; }
         
-        @media (max-width: 600px) {
-            .card { min-width: 90%; }
-        }
+        @media (max-width: 600px) { .card { min-width: 90%; } }
     </style>
 </head>
 <body>
@@ -37,53 +34,85 @@
     <div class="header">
         <h1>📡 Μετεωρολογικός Σταθμός SY3EBK</h1>
         <p>Live Δεδομένα από ESP8266 & BME280</p>
+        <div id="clock-display" class="live-clock-container">Φόρτωση...</div>
+        <div id="sun-display" class="sun-container">Υπολογισμός ηλιοφάνειας...</div>
     </div>
 
     <div class="section-title">🏔️ Κορφές-Καλαβρύτων (alt: 900m)</div>
     
-    <!-- ΕΝΟΤΗΤΑ 1: ΡΟΛΟΓΙΑ (GAUGES) -->
     <div class="container">
+        <!-- ΕΠΑΝΩ ΣΕΙΡΑ: WIDGETS (ΡΟΛΟΓΙΑ) -->
         <div class="card">
             <h3 class="temp-h3">Θερμοκρασία</h3>
-            <iframe width="250" height="250" src="https://thingspeak.com/channels/3325506/widgets/1240313"></iframe>
+            <iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/3325506/widgets/1240313"></iframe>
         </div>
-
         <div class="card">
             <h3 class="hum-h3">Υγρασία</h3>
-            <iframe width="250" height="250" src="https://thingspeak.com/channels/3325506/widgets/1240314"></iframe>
+            <iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/3325506/widgets/1240314"></iframe>
         </div>
-
         <div class="card">
             <h3 class="pres-h3">Ατμοσφαιρική Πίεση</h3>
-            <iframe width="250" height="250" src="https://thingspeak.com/channels/3325506/widgets/1240315"></iframe>
+            <iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/3325506/widgets/1240315"></iframe>
         </div>
     </div>
 
     <div class="section-title">📊 Ιστορικά Γραφήματα (Τελευταίες 15 ώρες)</div>
-
-    <!-- ΕΝΟΤΗΤΑ 2: ΓΡΑΦΗΜΑΤΑ -->
     <div class="container">
+        <!-- ΚΑΤΩ ΣΕΙΡΑ: ΓΡΑΦΗΜΑΤΑ -->
         <div class="card">
             <h3 class="temp-h3">Διακύμανση Θερμοκρασίας</h3>
-            <iframe width="450" height="300" src="https://thingspeak.com"></iframe>
+            <iframe width="650" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/3325506/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15"></iframe>
         </div>
-
         <div class="card">
             <h3 class="hum-h3">Διακύμανση Υγρασίας</h3>
-            <iframe width="450" height="300" src="https://thingspeak.com"></iframe>
+            <iframe width="650" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/3325506/charts/2?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15"></iframe>
         </div>
-
         <div class="card">
             <h3 class="pres-h3">Διακύμανση Πίεσης</h3>
-            <iframe width="450" height="300" src="https://thingspeak.com"></iframe>
+            <iframe width="650" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/3325506/charts/3?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15"></iframe>
         </div>
     </div>
 
     <div class="footer">
-        © 2024 SY3EBK Weather Project | Δεδομένα μέσω 
-        <a href="https://aprs.fi" target="_blank">APRS.fi</a> & 
-        <a href="https://thingspeak.com/channels/3325506" target="_blank">ThingSpeak</a>
+        © 2024 SY3EBK Weather Project | Δεδομένα μέσω <a href="https://aprs.fi" target="_blank">APRS.fi</a> & <a href="https://thingspeak.com/channels/3325506" target="_blank">ThingSpeak</a>
     </div>
 
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('clock-display').innerHTML = `${day}/${month}/${year} - ${hours}:${minutes}:${seconds}`;
+        }
+
+        function calculateSun() {
+            const lat = 38.0869;
+            const lng = 22.0318;
+            const now = new Date();
+            const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+            const decl = 23.45 * Math.sin((Math.PI / 180) * (360 / 365) * (dayOfYear - 81));
+            const hourAngle = Math.acos(-Math.tan((Math.PI / 180) * lat) * Math.tan((Math.PI / 180) * decl)) * (180 / Math.PI);
+            const solarNoon = 12 + (4 * (15 - lng) / 60); 
+            const sunriseDec = solarNoon - (hourAngle / 15);
+            const sunsetDec = solarNoon + (hourAngle / 15);
+            const isDST = now.getTimezoneOffset() < 0 ? 3 : 2;
+
+            const formatTime = (decHour) => {
+                let totalMin = Math.round(decHour * 60) + (isDST * 60);
+                let h = Math.floor(totalMin / 60) % 24;
+                let m = totalMin % 60;
+                return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+            };
+            document.getElementById('sun-display').innerHTML = `🌅 Ανατολή: ${formatTime(sunriseDec)} | 🌇 Δύση: ${formatTime(sunsetDec)}`;
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
+        calculateSun();
+    </script>
 </body>
 </html>
