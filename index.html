@@ -11,7 +11,7 @@
         .header p { margin: 5px 0 0; opacity: 0.8; }
         
         .live-clock-container { font-size: 1.2em; margin-top: 10px; font-weight: bold; color: #f1c40f; }
-        .sun-container { font-size: 1em; margin-top: 8px; color: #ffffff; background: rgba(255,255,255,0.1); display: inline-block; padding: 5px 15px; border-radius: 20px; }
+        .sun-container { font-size: 1em; margin-top: 8px; color: #ffffff; background: rgba(255,255,255,0.1); display: inline-block; padding: 8px 20px; border-radius: 20px; line-height: 1.5; }
 
         .section-title { text-align: center; margin: 40px 0 20px; font-size: 1.5em; color: #2c3e50; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
         .container { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: 1300px; margin: 0 auto; }
@@ -35,7 +35,7 @@
         <h1>📡 Μετεωρολογικός Σταθμός SY3EBK</h1>
         <p>Δεδομένα από ESP8266 & BME280</p>
         <div id="clock-display" class="live-clock-container">Φόρτωση...</div>
-        <div id="sun-display" class="sun-container">Υπολογισμός ηλιοφάνειας...</div>
+        <div id="sun-display" class="sun-container">Υπολογισμός δεδομένων...</div>
     </div>
 
     <div class="section-title">🏔️ Κορφές-Καλαβρύτων (alt: 900m)</div>
@@ -89,25 +89,55 @@
             document.getElementById('clock-display').innerHTML = `${day}/${month}/${year} - ${hours}:${minutes}:${seconds}`;
         }
 
+        function getMoonPhase(date) {
+            const lp = 2551443; 
+            const now = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 20, 35, 0);
+            const new_moon = new Date(1970, 0, 7, 20, 35, 0);
+            const phase = ((now.getTime() - new_moon.getTime()) / 1000) % lp;
+            const res = Math.floor(phase / (24 * 3600));
+            if (res < 2) return { name: "Νέα Σελήνη", icon: "🌑" };
+            if (res < 7) return { name: "Αύξων Μηνίσκος", icon: "🌒" };
+            if (res < 10) return { name: "Πρώτο Τέταρτο", icon: "🌓" };
+            if (res < 14) return { name: "Αύξων Αμφίκυρτος", icon: "🌔" };
+            if (res < 17) return { name: "Πανσέληνος", icon: "🌕" };
+            if (res < 22) return { name: "Φθίνων Αμφίκυρτος", icon: "🌖" };
+            if (res < 25) return { name: "Τελευταίο Τέταρτο", icon: "🌗" };
+            return { name: "Φθίνων Μηνίσκος", icon: "🌘" };
+        }
+
         function calculateSun() {
             const lat = 38.0869;
             const lng = 22.0318;
             const now = new Date();
-            const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
-            const decl = 23.45 * Math.sin((Math.PI / 180) * (360 / 365) * (dayOfYear - 81));
-            const hourAngle = Math.acos(-Math.tan((Math.PI / 180) * lat) * Math.tan((Math.PI / 180) * decl)) * (180 / Math.PI);
-            const solarNoon = 12 + (4 * (15 - lng) / 60); 
-            const sunriseDec = solarNoon - (hourAngle / 15);
-            const sunsetDec = solarNoon + (hourAngle / 15);
-            const isDST = now.getTimezoneOffset() < 0 ? 3 : 2;
+            
+            const start = new Date(now.getFullYear(), 0, 0);
+            const dayOfYear = Math.floor((now - start) / 86400000);
 
-            const formatTime = (decHour) => {
-                let totalMin = Math.round(decHour * 60) + (isDST * 60);
+            const b = (2 * Math.PI * (dayOfYear - 81)) / 365;
+            const eot = 9.87 * Math.sin(2 * b) - 7.53 * Math.cos(b) - 1.5 * Math.sin(b);
+            const decl = 23.45 * Math.sin((Math.PI / 180) * (360 / 365) * (dayOfYear - 81));
+            
+            const cosHourAngle = -Math.tan((Math.PI / 180) * lat) * Math.tan((Math.PI / 180) * decl);
+            const hourAngle = Math.acos(Math.max(-1, Math.min(1, cosHourAngle))) * (180 / Math.PI);
+
+            const solarNoonUTC = 720 - (4 * lng) - eot;
+            const sunriseUTC = solarNoonUTC - (hourAngle * 4);
+            const sunsetUTC = solarNoonUTC + (hourAngle * 4);
+            const offset = -now.getTimezoneOffset(); 
+
+            const formatTime = (minUTC) => {
+                let totalMin = Math.round(minUTC + offset);
                 let h = Math.floor(totalMin / 60) % 24;
                 let m = totalMin % 60;
                 return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
             };
-            document.getElementById('sun-display').innerHTML = `🌅 Ανατολή: ${formatTime(sunriseDec)} | 🌇 Δύση: ${formatTime(sunsetDec)}`;
+
+            const durationMin = Math.round(hourAngle * 8);
+            const moon = getMoonPhase(now);
+
+            document.getElementById('sun-display').innerHTML = 
+                `🌅 Ανατολή: ${formatTime(sunriseUTC)} | 🌇 Δύση: ${formatTime(sunsetUTC)}<br>` +
+                `⏱️ Διάρκεια: ${Math.floor(durationMin/60)}ω ${durationMin%60}λ | ${moon.icon} ${moon.name}`;
         }
 
         setInterval(updateClock, 1000);
